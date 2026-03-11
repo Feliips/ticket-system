@@ -1,0 +1,23 @@
+body{
+  font-family: Arial, sans-serif;
+  margin:0;
+  background:#f4f4f4;
+  text-align:center;
+}
+
+header{
+  background:#222;
+  color:white;
+  padding:30px;
+}
+
+.hero img{
+  width:60%;
+  margin-top:20px;
+  border-radius:8px;
+}
+
+.hero p{
+  font-size:20px;
+  margin:20px;
+}
