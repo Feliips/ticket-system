@@ -1,23 +1,137 @@
-body{
-  font-family: Arial, sans-serif;
-  margin:0;
-  background:#f4f4f4;
-  text-align:center;
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-header{
-  background:#222;
-  color:white;
-  padding:30px;
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #020617, #0f172a);
+  color: #fff;
 }
 
-.hero img{
-  width:60%;
-  margin-top:20px;
-  border-radius:8px;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 60px;
 }
 
-.hero p{
-  font-size:20px;
-  margin:20px;
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.btn-outline {
+  border: 1px solid #38bdf8;
+  padding: 8px 18px;
+  border-radius: 8px;
+  color: #38bdf8;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-outline:hover {
+  background: #38bdf8;
+  color: #020617;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 60px;
+}
+
+.hero-text {
+  max-width: 500px;
+}
+
+.hero-text h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  color: #94a3b8;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.btn-primary {
+  background: #38bdf8;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  color: #020617;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+}
+
+.hero-image img {
+  width: 420px;
+  border-radius: 12px;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  background: #020617;
+  padding: 40px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 10px;
+}
+
+.login-box p {
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.btn-secondary {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  cursor: pointer;
+}
+
+.back-link {
+  display: block;
+  margin-top: 15px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 14px;
 }
