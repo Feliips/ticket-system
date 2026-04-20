@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const db = require('./db');
 
 const app = express();
 
@@ -21,6 +22,17 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log('Servidor rodando...');
-});
+const startServer = async () => {
+  try {
+    await db.query('SELECT 1');
+    console.log('Conectado ao MySQL!');
+  } catch (err) {
+    console.error('Falha no teste de conexao com MySQL:', err);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+};
+
+startServer();

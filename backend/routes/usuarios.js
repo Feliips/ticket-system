@@ -5,7 +5,7 @@ const db = require("../db");
 // POST - cadastrar usuário
 router
   .route("/")
-  .post((req, res) => {
+  .post(async (req, res) => {
     const { nome, login, senha } = req.body;
 
     if (!nome || !login || !senha) {
@@ -19,14 +19,18 @@ router
       VALUES (?, ?, ?)
     `;
 
-    db.query(sql, [nome, login, senha], (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ erro: "Erro ao cadastrar usuário" });
+    try {
+      await db.execute(sql, [nome, login, senha]);
+      return res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
+    } catch (err) {
+      console.error("Erro ao cadastrar usuário:", err);
+
+      if (err && err.code === "ER_DUP_ENTRY") {
+        return res.status(409).json({ erro: "Login já cadastrado" });
       }
 
-      return res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
-    });
+      return res.status(500).json({ erro: "Erro ao cadastrar usuário" });
+    }
   })
   .all((req, res) => {
     return res
