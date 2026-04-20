@@ -29,6 +29,13 @@ router
         return res.status(409).json({ erro: "Login já cadastrado" });
       }
 
+      if (err && err.code === "ECONNREFUSED") {
+        return res.status(503).json({
+          erro: "Sem conexao com o banco de dados",
+          codigo: err.code
+        });
+      }
+
       return res.status(500).json({ erro: "Erro ao cadastrar usuário" });
     }
   })

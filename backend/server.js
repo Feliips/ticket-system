@@ -28,6 +28,9 @@ const startServer = async () => {
     console.log('Conectado ao MySQL!');
   } catch (err) {
     console.error('Falha no teste de conexao com MySQL:', err);
+    console.error(
+      'Revise no Render as variaveis DB_HOST/DB_PORT/DB_USER/DB_PASSWORD/DB_NAME (ou MYSQL_ADDON_*)'
+    );
   }
 
   app.listen(PORT, () => {
