@@ -88,25 +88,42 @@ Essa plataforma permite executar aplicações Node.js na nuvem de forma gratuita
 
 ```
 ticket-system/
+├── backend/
+│   ├── routes/
+│   ├── db.js
+│   ├── server.js
+│   └── package.json
+│
+├── frontend/
+│   ├── assets/
+│   ├── css/
+│   ├── js/
+│   ├── index.html
+│   ├── login.html
+│   └── cadastro.html
 │
 ├── docs/
 │   ├── diagrams/
-│   └── sprints/
-│
-├── frontend/
-│   ├── css/
-│   ├── assets/
-│   └── index.html
-│
-├── backend/
-│   └── server.js
+│   ├── sprints/
+│   └── requisitos.md
 │
 ├── database/
+│   ├── connection-example.env
+│   ├── README.md
 │   └── schema.sql
 │
+├── .gitignore
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
+
+## 🔎 Navegação Rápida
+
+* `docs/sprints/`: historico das entregas por sprint
+* `database/schema.sql`: estrutura oficial do banco
+* `backend/routes/usuarios.js`: primeira rota de cadastro de usuario
+* `frontend/`: telas do fluxo inicial (index, login e cadastro)
 
 ---
 

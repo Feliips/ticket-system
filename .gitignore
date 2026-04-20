@@ -8,6 +8,5 @@ node_modules/
 logs
 *.log
 
+design/
 agents/
-desing/figma
-desing/pencil
