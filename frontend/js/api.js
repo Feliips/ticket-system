@@ -1,5 +1,14 @@
 const API_BASE_URL = window.location.port === '5500' ? 'http://localhost:3000' : '';
 
+class ApiError extends Error {
+  constructor(message, status, code) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.code = code;
+  }
+}
+
 const buildUrl = (path, query = {}) => {
   const url = new URL(`${API_BASE_URL}${path}`, window.location.origin);
 
@@ -25,10 +34,16 @@ const request = async (path, options = {}, query = {}) => {
     return null;
   }
 
-  const data = await response.json();
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch (_error) {
+    data = null;
+  }
 
   if (!response.ok) {
-    throw new Error(data.erro || 'Erro na requisicao');
+    throw new ApiError(data?.erro || 'Erro na requisicao', response.status, data?.code || data?.codigo);
   }
 
   return data;
