@@ -1,15 +1,29 @@
-document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+const cadastroForm = document.getElementById('cadastroForm');
+const cadastroSubmitBtn = document.getElementById('cadastroSubmitBtn');
+const cadastroFeedback = document.getElementById('cadastroFeedback');
+
+const setCadastroFeedback = (message, isError = false) => {
+  cadastroFeedback.textContent = message;
+  cadastroFeedback.classList.toggle('feedback-error', isError);
+};
+
+cadastroForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const nome = document.getElementById('nome').value;
-  const login = document.getElementById('login').value;
+  const nome = document.getElementById('nome').value.trim();
+  const login = document.getElementById('login').value.trim();
   const senha = document.getElementById('senha').value;
 
+  cadastroSubmitBtn.disabled = true;
+  setCadastroFeedback('Cadastrando usuario...');
+
   try {
-    const data = await window.usuariosApi.create({ nome, login, senha });
-    alert(data.mensagem);
+    await window.usuariosApi.create({ nome, login, senha });
+    setCadastroFeedback('Usuario cadastrado com sucesso. Redirecionando...');
     window.location.href = 'usuarios.html';
   } catch (error) {
-    alert(error.message || 'Erro ao cadastrar');
+    setCadastroFeedback(error.message || 'Erro ao cadastrar usuario.', true);
+  } finally {
+    cadastroSubmitBtn.disabled = false;
   }
 });

@@ -5,6 +5,9 @@ const limparFiltrosBtn = document.getElementById('limparFiltros');
 const paginaAnteriorBtn = document.getElementById('paginaAnterior');
 const proximaPaginaBtn = document.getElementById('proximaPagina');
 const paginationInfo = document.getElementById('paginationInfo');
+const filtroNome = document.getElementById('filtroNome');
+const filtroLogin = document.getElementById('filtroLogin');
+const filtroBuscarBtn = filtroForm.querySelector('button[type="submit"]');
 
 const state = {
   page: 1,
@@ -22,6 +25,13 @@ const formatDate = (dateValue) => {
 const setFeedback = (message, isError = false) => {
   feedback.textContent = message;
   feedback.classList.toggle('feedback-error', isError);
+};
+
+const setLoading = (isLoading) => {
+  filtroBuscarBtn.disabled = isLoading;
+  limparFiltrosBtn.disabled = isLoading;
+  paginaAnteriorBtn.disabled = isLoading || state.page <= 1;
+  proximaPaginaBtn.disabled = isLoading || state.page >= state.totalPages;
 };
 
 const renderRows = (users) => {
@@ -55,6 +65,7 @@ const refreshPagination = () => {
 };
 
 const loadUsers = async () => {
+  setLoading(true);
   setFeedback('Carregando usuarios...');
 
   try {
@@ -70,10 +81,12 @@ const loadUsers = async () => {
 
     renderRows(items);
     refreshPagination();
-    setFeedback(`${items.length} usuario(s) exibido(s).`);
+    setFeedback(`${items.length} usuario(s) exibido(s) na pagina atual.`);
   } catch (error) {
     setFeedback(error.message || 'Erro ao carregar usuarios.', true);
     usuariosBody.innerHTML = '<tr><td colspan="5">Falha ao carregar dados.</td></tr>';
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -86,6 +99,7 @@ usuariosBody.addEventListener('click', async (event) => {
   if (!confirmed) return;
 
   try {
+    setFeedback('Excluindo usuario...');
     await window.usuariosApi.remove(id);
     setFeedback('Usuario excluido com sucesso.');
     await loadUsers();
@@ -97,14 +111,14 @@ usuariosBody.addEventListener('click', async (event) => {
 filtroForm.addEventListener('submit', (event) => {
   event.preventDefault();
   state.page = 1;
-  state.nome = document.getElementById('filtroNome').value.trim();
-  state.login = document.getElementById('filtroLogin').value.trim();
+  state.nome = filtroNome.value.trim();
+  state.login = filtroLogin.value.trim();
   loadUsers();
 });
 
 limparFiltrosBtn.addEventListener('click', () => {
-  document.getElementById('filtroNome').value = '';
-  document.getElementById('filtroLogin').value = '';
+  filtroNome.value = '';
+  filtroLogin.value = '';
   state.page = 1;
   state.nome = '';
   state.login = '';
