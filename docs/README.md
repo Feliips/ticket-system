@@ -15,6 +15,7 @@ Indice principal da documentacao tecnica e academica.
 - `sprint-03.md`
 - `sprint-04.md`
 - `sprint-05.md`
+- `sprint-06.md`
 
 ## Convencao recomendada
 
