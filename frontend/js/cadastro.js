@@ -1,5 +1,3 @@
-const API_BASE_URL = window.location.port === '5500' ? 'http://localhost:3000' : '';
-
 document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -8,21 +6,9 @@ document.getElementById('cadastroForm').addEventListener('submit', async (e) => 
   const senha = document.getElementById('senha').value;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/usuarios`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ nome, login, senha }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.erro || 'Erro ao cadastrar usuário');
-    }
-
+    const data = await window.usuariosApi.create({ nome, login, senha });
     alert(data.mensagem);
+    window.location.href = 'usuarios.html';
   } catch (error) {
     alert(error.message || 'Erro ao cadastrar');
   }

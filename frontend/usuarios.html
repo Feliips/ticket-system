@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios - Ticket System</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="crud-page container">
+      <section class="crud-header card">
+        <div>
+          <h1>Usuarios</h1>
+          <p>Gerencie os usuarios cadastrados no sistema.</p>
+        </div>
+        <a href="usuario-form.html" class="btn-primary">Novo usuario</a>
+      </section>
+
+      <section class="crud-filters card">
+        <form id="filtroForm" class="crud-filter-form">
+          <input type="text" id="filtroNome" placeholder="Buscar por nome" />
+          <input type="text" id="filtroLogin" placeholder="Buscar por login" />
+          <button type="submit" class="btn-secondary">Buscar</button>
+          <button type="button" id="limparFiltros" class="btn-outline">Limpar</button>
+        </form>
+      </section>
+
+      <section class="crud-table-wrapper card">
+        <div id="feedback" class="feedback-text" aria-live="polite"></div>
+        <table class="crud-table" aria-describedby="feedback">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Login</th>
+              <th>Atualizado em</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody id="usuariosBody"></tbody>
+        </table>
+      </section>
+
+      <section class="crud-pagination card">
+        <button id="paginaAnterior" class="btn-outline" type="button">Anterior</button>
+        <span id="paginationInfo">Pagina 1</span>
+        <button id="proximaPagina" class="btn-outline" type="button">Proxima</button>
+      </section>
+
+      <a href="index.html" class="back-link">← Voltar para inicio</a>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/usuarios-lista.js"></script>
+  </body>
+</html>
