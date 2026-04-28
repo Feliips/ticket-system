@@ -43,4 +43,8 @@ const startServer = async () => {
   });
 };
 
-startServer();
+module.exports = app;
+
+if (require.main === module) {
+  startServer();
+}
