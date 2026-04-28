@@ -34,10 +34,10 @@ const listUsers = async ({ page, limit, offset, nome, login }) => {
     FROM tbUsuarios
     ${whereClause}
     ORDER BY usuario_id DESC
-    LIMIT ? OFFSET ?
+    LIMIT ${Number(limit)} OFFSET ${Number(offset)}
   `;
 
-  const [rows] = await db.execute(listSql, [...values, limit, offset]);
+  const [rows] = await db.execute(listSql, values);
 
   return {
     items: rows,
