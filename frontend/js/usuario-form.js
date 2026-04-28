@@ -25,6 +25,36 @@ const setFeedback = (message, isError = false) => {
   feedbackForm.classList.toggle('feedback-error', isError);
 };
 
+const getFriendlyMessage = (error) => {
+  const rawMessage = String(error?.message || '').toLowerCase();
+  const status = Number(error?.status || 0);
+  const code = String(error?.code || '').toLowerCase();
+
+  if (
+    status === 409 ||
+    code === 'er_dup_entry' ||
+    code === 'duplicate_entry' ||
+    code === 'login_duplicate' ||
+    rawMessage.includes('login ja cadastrado')
+  ) {
+    return 'Esse login ja esta em uso. Tente outro login.';
+  }
+
+  if (status === 400 || rawMessage.includes('obrigatorios')) {
+    return 'Verifique os campos obrigatorios e tente novamente.';
+  }
+
+  if (rawMessage.includes('senha deve ter ao menos 6 caracteres')) {
+    return 'A senha deve ter pelo menos 6 caracteres.';
+  }
+
+  if (status === 503 || rawMessage.includes('sem conexao com o banco')) {
+    return 'Nao foi possivel conectar ao servidor agora. Tente novamente em instantes.';
+  }
+
+  return 'Nao foi possivel salvar os dados agora. Tente novamente.';
+};
+
 const fillForm = (user) => {
   document.getElementById('nome').value = user.nome;
   document.getElementById('login').value = user.login;
@@ -50,7 +80,7 @@ const setupMode = async () => {
     fillForm(response.data);
     setFeedback('Dados carregados.');
   } catch (error) {
-    setFeedback(error.message || 'Erro ao carregar usuario.', true);
+    setFeedback(getFriendlyMessage(error), true);
   }
 };
 
@@ -75,7 +105,7 @@ usuarioForm.addEventListener('submit', async (event) => {
     await window.usuariosApi.create({ nome, login, senha });
     window.location.href = 'usuarios.html';
   } catch (error) {
-    setFeedback(error.message || 'Erro ao salvar usuario.', true);
+    setFeedback(getFriendlyMessage(error), true);
   } finally {
     setButtonsDisabled(false);
   }
@@ -92,7 +122,7 @@ senhaForm.addEventListener('submit', async (event) => {
     novaSenhaInput.value = '';
     setFeedback('Senha atualizada com sucesso.');
   } catch (error) {
-    setFeedback(error.message || 'Erro ao atualizar senha.', true);
+    setFeedback(getFriendlyMessage(error), true);
   } finally {
     setButtonsDisabled(false);
   }
