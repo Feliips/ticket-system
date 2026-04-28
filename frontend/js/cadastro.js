@@ -49,8 +49,11 @@ cadastroForm.addEventListener('submit', async (e) => {
 
   try {
     await window.usuariosApi.create({ nome, login, senha });
-    setCadastroFeedback('Usuario cadastrado com sucesso. Redirecionando...');
-    window.location.href = 'usuarios.html';
+    setCadastroFeedback('Cadastro realizado com sucesso. Fac login para continuar.');
+    cadastroForm.reset();
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
   } catch (error) {
     setCadastroFeedback(getFriendlyMessage(error), true);
   } finally {

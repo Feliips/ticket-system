@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header class="navbar">
+<header class="navbar">
       <div class="logo">🎟️ Ticket System</div>
 
-      <nav>
+      <nav id="navbarNav">
         <a href="usuarios.html" class="btn-secondary">Usuarios</a>
         <a href="login.html" class="btn-outline">Entrar</a>
       </nav>
@@ -25,8 +25,7 @@
           rápida e eficiente.
         </p>
 
-        <div class="buttons">
-          <a href="usuarios.html" class="btn-secondary">Gerenciar Usuarios</a>
+<div class="buttons" id="heroButtons">
           <a href="login.html" class="btn-primary">Acessar Sistema</a>
           <a href="cadastro.html" class="btn-secondary">Criar Conta</a>
         </div>
@@ -40,5 +39,32 @@
     <footer class="footer">
       <p>© 2026 Ticket System - Projeto Acadêmico</p>
     </footer>
+
+    <script src="js/api.js"></script>
+    <script>
+      (function() {
+        const navbarNav = document.getElementById('navbarNav');
+        const heroButtons = document.getElementById('heroButtons');
+        const usuario = window.auth.getUsuario();
+        const isAuth = window.auth.isAuthenticated();
+
+        if (isAuth && usuario) {
+          navbarNav.innerHTML = `
+            <a href="usuarios.html" class="btn-secondary">Usuarios</a>
+            <span class="user-info">${window.escapeHtml(usuario.nome || usuario.login)}</span>
+            <button id="logoutBtn" class="btn-outline" type="button">Sair</button>
+          `;
+
+          heroButtons.innerHTML = `
+            <a href="usuarios.html" class="btn-primary">Gerenciar Usuarios</a>
+          `;
+
+          document.getElementById('logoutBtn').addEventListener('click', function() {
+            window.auth.logout();
+            window.location.href = 'index.html';
+          });
+        }
+      })();
+    </script>
   </body>
 </html>

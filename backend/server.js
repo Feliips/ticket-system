@@ -11,7 +11,9 @@ app.use(express.json());
 
 // rotas
 const usuariosRoutes = require('./routes/usuarios');
+const authRoutes = require('./routes/auth');
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/auth', authRoutes);
 
 // servir frontend
 app.use(express.static(path.join(__dirname, '../frontend')));

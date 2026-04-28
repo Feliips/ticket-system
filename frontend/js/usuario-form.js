@@ -1,3 +1,8 @@
+if (!window.auth.isAuthenticated()) {
+  window.location.href = 'login.html';
+  throw new Error('Nao autenticado');
+}
+
 const params = new URLSearchParams(window.location.search);
 const userId = params.get('id');
 const isEditMode = Boolean(userId);

@@ -1,3 +1,8 @@
+if (!window.auth.isAuthenticated()) {
+  window.location.href = 'login.html';
+  throw new Error('Nao autenticado');
+}
+
 const usuariosBody = document.getElementById('usuariosBody');
 const feedback = document.getElementById('feedback');
 const filtroForm = document.getElementById('filtroForm');

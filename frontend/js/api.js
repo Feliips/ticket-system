@@ -1,5 +1,51 @@
 const API_BASE_URL = window.location.port === '5500' ? 'http://localhost:3000' : '';
 
+const SESSION_TOKEN_KEY = 'auth_token';
+const SESSION_USER_KEY = 'auth_user';
+
+const escapeHtml = (value) =>
+  String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+
+const auth = {
+  getToken: () => localStorage.getItem(SESSION_TOKEN_KEY),
+
+  getUsuario: () => {
+    const userStr = localStorage.getItem(SESSION_USER_KEY);
+    if (!userStr) return null;
+    try {
+      return JSON.parse(userStr);
+    } catch {
+      return null;
+    }
+  },
+
+  isAuthenticated: () => {
+    const token = localStorage.getItem(SESSION_TOKEN_KEY);
+    const user = localStorage.getItem(SESSION_USER_KEY);
+    return !!(token && user);
+  },
+
+  login: (token, usuario) => {
+    localStorage.setItem(SESSION_TOKEN_KEY, token);
+    localStorage.setItem(SESSION_USER_KEY, JSON.stringify(usuario));
+  },
+
+  logout: () => {
+    localStorage.removeItem(SESSION_TOKEN_KEY);
+    localStorage.removeItem(SESSION_USER_KEY);
+  },
+
+  getAuthHeader: () => {
+    const token = auth.getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+};
+
 class ApiError extends Error {
   constructor(message, status, code) {
     super(message);
@@ -22,9 +68,11 @@ const buildUrl = (path, query = {}) => {
 };
 
 const request = async (path, options = {}, query = {}) => {
+  const authHeaders = auth.getAuthHeader();
   const response = await fetch(buildUrl(path, query), {
     headers: {
       'Content-Type': 'application/json',
+      ...authHeaders,
       ...(options.headers || {}),
     },
     ...options,
@@ -60,4 +108,13 @@ const usuariosApi = {
   remove: (id) => request(`/api/usuarios/${id}`, { method: 'DELETE' }),
 };
 
+const authApi = {
+  login: (payload) =>
+    request('/api/auth/login', { method: 'POST', body: JSON.stringify(payload) }),
+  me: () => request('/api/auth/me', { method: 'GET' }),
+};
+
 window.usuariosApi = usuariosApi;
+window.authApi = authApi;
+window.auth = auth;
+window.escapeHtml = escapeHtml;
