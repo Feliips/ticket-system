@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const db = require("../db");
+const AppError = require("../utils/appError");
 
 const SALT_ROUNDS = 10;
 
@@ -61,7 +62,24 @@ const getUserById = async (id) => {
   return rows[0] || null;
 };
 
+const getUserByLogin = async (login) => {
+  const sql = `
+    SELECT usuario_id, nome, login, atualizado_em, atualizado_por
+    FROM tbUsuarios
+    WHERE login = ?
+    LIMIT 1
+  `;
+
+  const [rows] = await db.execute(sql, [login]);
+  return rows[0] || null;
+};
+
 const createUser = async ({ nome, login, senha }) => {
+  const existingUser = await getUserByLogin(login);
+  if (existingUser) {
+    throw new AppError("Login ja cadastrado", 409, "LOGIN_DUPLICATE");
+  }
+
   const senhaHash = await bcrypt.hash(senha, SALT_ROUNDS);
   const sql = `
     INSERT INTO tbUsuarios (nome, login, senha)
@@ -73,6 +91,16 @@ const createUser = async ({ nome, login, senha }) => {
 };
 
 const updateUser = async (id, { nome, login }) => {
+  const currentUser = await getUserById(id);
+  if (!currentUser) {
+    return 0;
+  }
+
+  const existingUser = await getUserByLogin(login);
+  if (existingUser && existingUser.usuario_id !== id) {
+    throw new AppError("Login ja cadastrado", 409, "LOGIN_DUPLICATE");
+  }
+
   const sql = `
     UPDATE tbUsuarios
     SET nome = ?, login = ?, atualizado_em = CURRENT_TIMESTAMP
@@ -104,6 +132,7 @@ const deleteUser = async (id) => {
 module.exports = {
   listUsers,
   getUserById,
+  getUserByLogin,
   createUser,
   updateUser,
   updatePassword,

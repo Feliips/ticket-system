@@ -3,6 +3,8 @@ const toInt = (value) => {
   return Number.isNaN(parsed) ? null : parsed;
 };
 
+const normalizeLogin = (value) => String(value).trim().toLowerCase();
+
 const validateCreateUser = (payload) => {
   const { nome, login, senha } = payload || {};
 
@@ -26,7 +28,7 @@ const validateCreateUser = (payload) => {
     valid: true,
     data: {
       nome: String(nome).trim(),
-      login: String(login).trim(),
+      login: normalizeLogin(login),
       senha: String(senha)
     }
   };
@@ -51,7 +53,7 @@ const validateUpdateUser = (payload) => {
     valid: true,
     data: {
       nome: String(nome).trim(),
-      login: String(login).trim()
+      login: normalizeLogin(login)
     }
   };
 };
