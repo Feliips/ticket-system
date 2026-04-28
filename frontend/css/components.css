@@ -181,6 +181,19 @@ form#cadastroForm button {
   letter-spacing: 0.015em;
 }
 
+.navbar nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.user-info {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  padding: 0 var(--space-2);
+  white-space: nowrap;
+}
+
 .footer {
   width: min(100% - 2rem, var(--container-max));
   margin-inline: auto;
