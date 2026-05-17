@@ -24,6 +24,13 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
+  if (err && err.code === "ER_USER_LIMIT_REACHED") {
+    return res.status(503).json({
+      erro: "Limite de conexoes com o banco atingido",
+      code: "DB_CONNECTION_LIMIT"
+    });
+  }
+
   return res.status(500).json({ erro: "Erro interno no servidor", code: "INTERNAL_SERVER_ERROR" });
 };
 
