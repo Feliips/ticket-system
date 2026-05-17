@@ -7,29 +7,49 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <main class="page-center">
-      <section class="card crud-form-box" aria-labelledby="usuario-form-title">
-        <h2 id="usuario-form-title">Novo usuario</h2>
+    <main class="usuario-form-page container">
+      <section class="usuario-form-intro card">
+        <span class="usuarios-kicker">Cadastro e edicao</span>
+        <h1 id="usuario-form-title">Novo usuario</h1>
+        <p>
+          Preencha os dados do usuario para criar um novo acesso ou atualize informacoes de uma
+          conta existente com seguranca e consistencia.
+        </p>
+        <a href="usuarios.html" class="back-link">← Voltar para usuarios</a>
+      </section>
 
-        <form id="usuarioForm">
-          <input type="text" id="nome" placeholder="Nome" required />
-          <input type="text" id="login" placeholder="Login" required />
+      <section class="card crud-form-box" aria-labelledby="usuario-form-title">
+        <form id="usuarioForm" class="usuario-form-grid">
+          <label class="usuarios-field">
+            <span>Nome completo</span>
+            <input type="text" id="nome" placeholder="Digite o nome do usuario" required />
+          </label>
+
+          <label class="usuarios-field">
+            <span>Login</span>
+            <input type="text" id="login" placeholder="Digite o login" required />
+          </label>
 
           <div id="senhaContainer">
-            <input type="password" id="senha" placeholder="Senha" required />
+            <label class="usuarios-field">
+              <span>Senha</span>
+              <input type="password" id="senha" placeholder="Minimo de 6 caracteres" required />
+            </label>
           </div>
 
           <button type="submit" class="btn-primary" id="submitBtn">Salvar</button>
         </form>
 
-        <form id="senhaForm" class="hidden">
+        <form id="senhaForm" class="hidden usuario-password-box">
           <h3>Atualizar senha</h3>
-          <input type="password" id="novaSenha" placeholder="Nova senha" minlength="6" />
+          <label class="usuarios-field">
+            <span>Nova senha</span>
+            <input type="password" id="novaSenha" placeholder="Digite a nova senha" minlength="6" />
+          </label>
           <button type="submit" class="btn-secondary">Atualizar senha</button>
         </form>
 
         <p id="feedbackForm" class="feedback-text" aria-live="polite"></p>
-        <a href="usuarios.html" class="back-link">← Voltar para usuarios</a>
       </section>
     </main>
 

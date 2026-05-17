@@ -13,23 +13,45 @@ const paginationInfo = document.getElementById('paginationInfo');
 const filtroNome = document.getElementById('filtroNome');
 const filtroLogin = document.getElementById('filtroLogin');
 const filtroBuscarBtn = filtroForm.querySelector('button[type="submit"]');
+const usuariosTotalPagina = document.getElementById('usuariosTotalPagina');
+const usuariosPaginaAtual = document.getElementById('usuariosPaginaAtual');
+const usuariosFiltroAtivo = document.getElementById('usuariosFiltroAtivo');
 
 const state = {
   page: 1,
-  limit: 10,
+  limit: 8,
   totalPages: 1,
   nome: '',
   login: '',
+  totalItemsPagina: 0,
 };
 
 const formatDate = (dateValue) => {
-  if (!dateValue) return '-';
-  return new Date(dateValue).toLocaleString('pt-BR');
+  if (!dateValue) return 'Sem atualizacao';
+  return new Date(dateValue).toLocaleString('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  });
+};
+
+const getActiveFilterLabel = () => {
+  const activeFilters = [];
+
+  if (state.nome) {
+    activeFilters.push(`Nome: ${state.nome}`);
+  }
+
+  if (state.login) {
+    activeFilters.push(`Login: ${state.login}`);
+  }
+
+  return activeFilters.length ? activeFilters.join(' | ') : 'Nenhum';
 };
 
 const setFeedback = (message, isError = false) => {
   feedback.textContent = message;
   feedback.classList.toggle('feedback-error', isError);
+  feedback.classList.toggle('feedback-success', !isError && Boolean(message));
 };
 
 const setLoading = (isLoading) => {
@@ -39,27 +61,57 @@ const setLoading = (isLoading) => {
   proximaPaginaBtn.disabled = isLoading || state.page >= state.totalPages;
 };
 
+const refreshSummary = () => {
+  usuariosTotalPagina.textContent = String(state.totalItemsPagina);
+  usuariosPaginaAtual.textContent = String(state.page);
+  usuariosFiltroAtivo.textContent = getActiveFilterLabel();
+};
+
+const renderEmptyState = (message) => {
+  usuariosBody.innerHTML = `
+    <tr>
+      <td colspan="5" class="usuarios-empty-cell">
+        <div class="usuarios-empty-state">
+          <strong>Nenhum usuario encontrado</strong>
+          <span>${window.escapeHtml(message)}</span>
+        </div>
+      </td>
+    </tr>
+  `;
+};
+
 const renderRows = (users) => {
   if (!users.length) {
-    usuariosBody.innerHTML = '<tr><td colspan="5">Nenhum usuario encontrado.</td></tr>';
+    renderEmptyState('Tente ajustar os filtros ou cadastrar um novo usuario.');
     return;
   }
 
   usuariosBody.innerHTML = users
-    .map(
-      (user) => `
-      <tr>
-        <td>${user.usuario_id}</td>
-        <td>${user.nome}</td>
-        <td>${user.login}</td>
-        <td>${formatDate(user.atualizado_em)}</td>
-        <td class="acoes-cell">
-          <a class="btn-secondary" href="usuario-form.html?id=${user.usuario_id}">Editar</a>
-          <button class="btn-outline delete-btn" data-id="${user.usuario_id}" type="button">Excluir</button>
-        </td>
-      </tr>
-    `
-    )
+    .map((user) => {
+      const nome = window.escapeHtml(user.nome || '-');
+      const login = window.escapeHtml(user.login || '-');
+      const userId = Number(user.usuario_id);
+
+      return `
+        <tr>
+          <td data-label="ID"><span class="usuarios-id-badge">#${userId}</span></td>
+          <td data-label="Usuario">
+            <div class="usuarios-user-cell">
+              <strong>${nome}</strong>
+              <span>Cadastro ativo no Ticket System</span>
+            </div>
+          </td>
+          <td data-label="Login"><code class="usuarios-login-tag">${login}</code></td>
+          <td data-label="Atualizacao">${formatDate(user.atualizado_em)}</td>
+          <td data-label="Acoes">
+            <div class="acoes-cell">
+              <a class="btn-secondary" href="usuario-form.html?id=${userId}">Editar</a>
+              <button class="btn-danger delete-btn" data-id="${userId}" type="button">Excluir</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    })
     .join('');
 };
 
@@ -82,14 +134,25 @@ const loadUsers = async () => {
     });
 
     const items = response.data.items || [];
-    state.totalPages = response.data.pagination.totalPages || 1;
+    const pagination = response.data.pagination || {};
+
+    state.totalItemsPagina = items.length;
+    state.totalPages = Math.max(pagination.totalPages || 1, 1);
 
     renderRows(items);
+    refreshSummary();
     refreshPagination();
-    setFeedback(`${items.length} usuario(s) exibido(s) na pagina atual.`);
+
+    if (items.length) {
+      setFeedback('Listagem atualizada com sucesso.');
+    } else {
+      setFeedback('Nenhum registro encontrado para os filtros informados.');
+    }
   } catch (error) {
+    state.totalItemsPagina = 0;
+    refreshSummary();
     setFeedback(error.message || 'Erro ao carregar usuarios.', true);
-    usuariosBody.innerHTML = '<tr><td colspan="5">Falha ao carregar dados.</td></tr>';
+    renderEmptyState('Nao foi possivel carregar os dados agora.');
   } finally {
     setLoading(false);
   }
@@ -105,10 +168,17 @@ usuariosBody.addEventListener('click', async (event) => {
 
   try {
     setFeedback('Excluindo usuario...');
+    button.disabled = true;
     await window.usuariosApi.remove(id);
-    setFeedback('Usuario excluido com sucesso.');
+
+    if (state.totalItemsPagina === 1 && state.page > 1) {
+      state.page -= 1;
+    }
+
     await loadUsers();
+    setFeedback('Usuario excluido com sucesso.');
   } catch (error) {
+    button.disabled = false;
     setFeedback(error.message || 'Erro ao excluir usuario.', true);
   }
 });
@@ -144,4 +214,6 @@ proximaPaginaBtn.addEventListener('click', () => {
   }
 });
 
+refreshSummary();
+refreshPagination();
 loadUsers();

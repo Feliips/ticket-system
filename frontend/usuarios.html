@@ -7,50 +7,94 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <main class="crud-page container">
-      <section class="crud-header card">
-        <div>
-          <h1>Usuarios</h1>
-          <p>Gerencie os usuarios cadastrados no sistema.</p>
+    <main class="usuarios-dashboard container">
+      <section class="usuarios-hero card">
+        <div class="usuarios-hero-copy">
+          <span class="usuarios-kicker">Painel administrativo</span>
+          <h1>Gerencie usuarios com clareza e rapidez</h1>
+          <p>
+            Consulte a base, filtre registros, edite acessos e acompanhe o status da equipe em uma
+            tela organizada para o fluxo diario.
+          </p>
         </div>
-        <a href="usuario-form.html" class="btn-primary">Novo usuario</a>
+
+        <div class="usuarios-hero-actions">
+          <a href="usuario-form.html" class="btn-primary">Cadastrar usuario</a>
+          <a href="index.html" class="btn-outline">Voltar ao inicio</a>
+        </div>
       </section>
 
-      <section class="crud-filters card">
-        <form id="filtroForm" class="crud-filter-form">
-          <input type="text" id="filtroNome" placeholder="Buscar por nome" />
-          <input type="text" id="filtroLogin" placeholder="Buscar por login" />
-          <button type="submit" class="btn-secondary">Buscar</button>
-          <button type="button" id="limparFiltros" class="btn-outline">Limpar</button>
+      <section class="usuarios-overview" aria-label="Resumo de usuarios">
+        <article class="overview-card card">
+          <span class="overview-label">Usuarios visiveis</span>
+          <strong id="usuariosTotalPagina" class="overview-value">0</strong>
+          <p>Registros carregados na pagina atual.</p>
+        </article>
+
+        <article class="overview-card card">
+          <span class="overview-label">Pagina atual</span>
+          <strong id="usuariosPaginaAtual" class="overview-value">1</strong>
+          <p>Navegacao paginada para manter leitura leve.</p>
+        </article>
+
+        <article class="overview-card card overview-card-highlight">
+          <span class="overview-label">Filtro ativo</span>
+          <strong id="usuariosFiltroAtivo" class="overview-value">Nenhum</strong>
+          <p>Busca por nome ou login aplicada na listagem.</p>
+        </article>
+      </section>
+
+      <section class="usuarios-panel card">
+        <div class="usuarios-panel-topbar">
+          <div>
+            <h2>Listagem de usuarios</h2>
+            <p>Visualize, edite e exclua registros sem sair do fluxo de gerenciamento.</p>
+          </div>
+
+          <div id="feedback" class="feedback-text usuarios-feedback" aria-live="polite"></div>
+        </div>
+
+        <form id="filtroForm" class="usuarios-filter-grid">
+          <label class="usuarios-field">
+            <span>Nome</span>
+            <input type="text" id="filtroNome" placeholder="Ex.: Maria" />
+          </label>
+
+          <label class="usuarios-field">
+            <span>Login</span>
+            <input type="text" id="filtroLogin" placeholder="Ex.: maria.silva" />
+          </label>
+
+          <div class="usuarios-filter-actions">
+            <button type="submit" class="btn-secondary">Aplicar filtros</button>
+            <button type="button" id="limparFiltros" class="btn-outline">Limpar</button>
+          </div>
         </form>
-      </section>
 
-      <section class="crud-table-wrapper card">
-        <div id="feedback" class="feedback-text" aria-live="polite"></div>
-        <table class="crud-table" aria-describedby="feedback">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Login</th>
-              <th>Atualizado em</th>
-              <th>Acoes</th>
-            </tr>
-          </thead>
-          <tbody id="usuariosBody"></tbody>
-        </table>
-      </section>
+        <div class="usuarios-table-shell">
+          <table class="usuarios-table" aria-describedby="feedback">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Login</th>
+                <th>Atualizacao</th>
+                <th>Acoes</th>
+              </tr>
+            </thead>
+            <tbody id="usuariosBody"></tbody>
+          </table>
+        </div>
 
-      <section class="crud-pagination card">
-        <button id="paginaAnterior" class="btn-outline" type="button">Anterior</button>
-        <span id="paginationInfo">Pagina 1</span>
-        <button id="proximaPagina" class="btn-outline" type="button">Proxima</button>
+        <div class="usuarios-pagination">
+          <button id="paginaAnterior" class="btn-outline" type="button">Anterior</button>
+          <span id="paginationInfo" class="usuarios-pagination-info">Pagina 1</span>
+          <button id="proximaPagina" class="btn-outline" type="button">Proxima</button>
+        </div>
       </section>
-
-      <a href="index.html" class="back-link">← Voltar para inicio</a>
     </main>
 
     <script src="js/api.js"></script>
-    <script src="js/usuarios-lista.js"></script>
+    <script src="js/usuarios.js"></script>
   </body>
 </html>
